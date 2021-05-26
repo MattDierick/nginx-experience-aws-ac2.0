@@ -1,0 +1,53 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: arcadia
+spec:
+  host: arcadia.local
+  upstreams:
+    - name: arcadia-users
+      service: arcadia-users
+      port: 80
+    - name: arcadia-login
+      service: arcadia-login
+      port: 80
+    - name: arcadia-stocks
+      service: arcadia-stocks
+      port: 80
+    - name: arcadia-stock-transaction
+      service: arcadia-stock-transaction
+      port: 80
+    - name: arcadia-frontend
+      service: arcadia-frontend
+      port: 80
+  routes:
+    - path: /v1/user
+      location-snippets: |
+        opentracing_propagate_context;
+        opentracing_operation_name "nginx-ingress";
+      action:
+        pass: arcadia-users
+    - path: /v1/login
+      location-snippets: |
+        opentracing_propagate_context;
+        opentracing_operation_name "nginx-ingress";
+      action:
+        pass: arcadia-login
+    - path: /v1/stock
+      location-snippets: |
+        opentracing_propagate_context;
+        opentracing_operation_name "nginx-ingress";
+      action:
+        pass: arcadia-stocks
+    - path: /v1/stockt
+      location-snippets: |
+        opentracing_propagate_context;
+        opentracing_operation_name "nginx-ingress";
+      action:
+        pass: arcadia-stock-transaction
+    - path: /
+      location-snippets: |
+        opentracing_propagate_context;
+        opentracing_operation_name "nginx-ingress";
+      action:
+        pass: arcadia-frontend

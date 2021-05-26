@@ -1,0 +1,10 @@
+helm install nginx-ingress nginx-stable/nginx-ingress  \
+--namespace nginx-ingress  \
+--set controller.kind=deployment \
+--set controller.replicaCount=1 \
+--set controller.nginxplus=true \
+--set controller.appprotect.enable=true \
+--set controller.image.repository=registry.gitlab.com/mattdierick/nginxpluskic-nap \
+--set controller.image.tag=1.11.2 \
+--set controller.serviceAccount.imagePullSecretName=gitlab-token-auth \
+--set controller.ingressClass=ingressclass1
